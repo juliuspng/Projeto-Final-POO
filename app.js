@@ -16,7 +16,7 @@ function cadastrarUsuarios() {
     let cpf = parseInt('Digite somente os números de seu CPF para seu cadastro: ') //CPF do usuário que logo será validado
     let email = prompt('Digite um email para seu cadastro: ') //Email do usuário que logo será validado
     let senha = prompt('Digite uma senha para seu cadastro: ') //Senha do usuário
-    let cargo = prompt('Digite o número respectivo ao seu cargo:\n1 - Cliente\n2 - Zelador\n3 - Atendente\n4 - Estoquista\n5 - Balconista\n6 - Gerente') //Cargo do usuário que logo será validado
+    let cargo = parseInt(prompt('Digite o número respectivo ao seu cargo:\n1 - Cliente\n2 - Zelador\n3 - Atendente\n4 - Estoquista\n5 - Balconista\n6 - Gerente')) //Cargo do usuário que logo será validado
     //Sistema de validação
 
     function validarCPF(x){ //Dizer se o CPF é um CPF válido ou não
@@ -33,6 +33,10 @@ function cadastrarUsuarios() {
     if (y.includes('.') == false){  //Caso não contenha ".", é um email inválido
         cadastrarUsuarios() //Repete toda a operação caso o email seja inválido
     }
+    }
+
+    function validarCargo(z){
+        
     }
 
     /* 
