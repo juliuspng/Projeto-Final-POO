@@ -115,22 +115,24 @@ function nomesemquot(nome) {
 
 //função para adicionar um novo filme ao estoque
 function adicionarProduto() {
-    //solicita ao usuario o nome do filme a ser adicionado
+    //solicita ao usuário o nome do filme a ser adicionado
     let nome = prompt("Digite o nome do Filme que você vai adicionar ao estoque");
-    //solicita ao usuario a quantidade de filmes a serem adicionados
+    //solicita ao usuário a quantidade de filmes a serem adicionados
     let quantidade = parseInt(prompt("Digite a quantidade de filmes que serão adicionados ao estoque"));
-    //solicita ao usuario o periodo de aluguel do filme no estoque
+    //solicita ao usuário o periodo de aluguel do filme no estoque
     let validade = prompt("Digite o periodo de aluguel do filme no estoque");
 
     //um novo objeto para representar o filme
     let novoProduto = {
         nome: nome, //nome do filme
         quantidade: quantidade, //quantidade de filmes
-        validade: validade //periodo de aluguel
+        validade: validade, //periodo de aluguel
     };
 
     //adiciona o novo filme ao estoque
     estoque.push(novoProduto);
+    //chama a função para adicionar nota ao filme
+    adicionarnota(nome); //fiquei quase 3h pra descobrir que tava chamando a função
 }
 
 //função para consultar o tempo de aluguel de um filme especifico
@@ -138,10 +140,10 @@ function validadeIndividual() {
     //solicita ao usuario o nome do filme para consultar seu tempo de aluguel
     let nome = prompt("Digite o nome do Filme para consultar seu tempo de aluguel:");
     //procura o filme no estoque pelo nome fornecido
-    let produto = estoque.find(item => item.nome === nome);
+    let produto = estoque.find(item => item.nome === nome); //valor e tipo
     //se o filme for encontrado, exibe seu periodo de aluguel SE NÃO informa que não possui o mesmo no estoque
     if (produto) {
-        console.log(`A validade do Filme "${nomesemquot(produto.nome)} alugado é ${produto.validade}`);
+        console.log(`A validade do Filme ${nomesemquot(produto.nome)} alugado é ${produto.validade}`);
     } else {
         console.log("Filme não encontrado no estoque")
     }
@@ -151,9 +153,14 @@ function validadeIndividual() {
 function imprimirRelatorioValidades() {
     console.log("Relatório de Validades:");
     console.log("Quantidade de produtos no estoque:", estoque.length);
-    //itera(repete) todos os produtos no estoque e mostra o nome e a validade de cada um
+    if (estoque.length === 0) {
+        console.log("O estoque está vazio.");
+        return;
+    }
+
+    //itera sobre cada produto no estoque e imprime o nome e a validade de cada um
     estoque.forEach(produto => {
-        console.log(`Nome do Filme: ${nomesemquot(produto.nome)}, Validade: ${produto.validade}`)
+        console.log(`Nome do Filme: ${produto.nome}, Validade: ${produto.validade}`);
     });
 }
 
@@ -164,7 +171,7 @@ function removerProduto() {
     //encontra o indice do filme no estoque
     let index = estoque.findIndex(produto => produto.nome === nome)
     //Se o filme for encontrado vai de arrasta SE NÃO avisa que não tem o mesmo no estoque
-    if (index !== -1) {
+    if (index !== -1) {  //dif valor e tipo
         estoque.splice(index, 1);
         console.log("Filme removido");
     } else {
@@ -186,12 +193,23 @@ function atualizarQuantidade() {
         produto.quantidade = quantidade;
         //esse comando foi pq tava saindo com um tal de quot no console
        
-        console.log(`Quantidade do produto "${nomesemquot(nome)}" atualizada para ${quantidade}`)
+        console.log(`Quantidade do produto ${nomesemquot(produto.nome)} atualizada para ${quantidade}`)
     } else {
         console.log("Seu Filme não foi encontrado no estoque")
     }
 }
+function adicionarnota(nomeFilme) {
+    let nota = parseInt(prompt("Forneça uma nota de 1 a 5 para o filme:"));
+    if (nota >= 1 && nota <= 5) {
+        console.log(`O filme ${nomeFilme} foi adicionado com a nota ${nota} com sucesso.`);
+    } else {
+        console.log("Por favor, forneça uma nota válida de 1 a 5.");
+    }
+}
 
+
+
+//fornecedores
 function cadastrarFornecedor() {
     let nomeDaEmpresa = prompt('Nome: ')
     let cnpj = parseInt(prompt('CNPJ: '))
