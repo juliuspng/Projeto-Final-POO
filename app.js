@@ -12,16 +12,18 @@ function cadastrarUsuarios() {
 
     //Sistema de coleta de dados
 
-    let nomeDoUsuario = prompt('Digite seu nome: ') //Nome do usuário
-    let cpf = parseInt('Digite somente os números de seu CPF para seu cadastro: ') //CPF do usuário que logo será validado
-    let email = prompt('Digite um email para seu cadastro: ') //Email do usuário que logo será validado
-    let senha = prompt('Digite uma senha para seu cadastro: ') //Senha do usuário
+    let nomeDoUsuario = prompt('Digite seu nome para o cadastro: ') //Nome do usuário
+    let cpf = parseInt(prompt('Digite seu CPF para cadastro: ')) //CPF do usuário que logo será validado
+    let email = prompt('Digite um email para cadastro: ') //Email do usuário que logo será validado
+    let senha = prompt('Digite uma senha para cadastro: ') //Senha do usuário
     let cargo = parseInt(prompt('Digite o número respectivo ao seu cargo:\n1 - Cliente\n2 - Zelador\n3 - Atendente\n4 - Estoquista\n5 - Balconista\n6 - Gerente')) //Cargo do usuário que logo será validado
+    
     //Sistema de validação
-
+    
     function validarCPF(x){ //Dizer se o CPF é um CPF válido ou não
-     if (x.length > 11 || x.length < 11){ //Um CPF possui 11 dígitos, algo diferente disso não seria um CPF
-        console.log('CPF inválido, cadastre novamente!') //Mensagem exibida caso o CPF seja inválido
+    x = x.replace(/[^\d]/g, ''); //Remover quaisquer caracteres para filtrar o número do CPF
+     if (x.length > 11 || x.length < 11 || /^(.)\1+$/.test(x)){ //Um CPF possui 11 dígitos, algo diferente disso não seria um CPF
+        alert('CPF inválido, cadastre novamente!') //Mensagem exibida caso o CPF seja inválido
         cadastrarUsuarios() //Repete toda a operação caso o CPF seja inválido
      }
     }
@@ -35,10 +37,42 @@ function cadastrarUsuarios() {
     }
     }
 
-    function validarCargo(z){
-        
+    switch (z) {
+        case 1:
+            cargo = 'Cliente';
+            break;
+        case 2:
+            cargo = 'Zelador';
+            break;
+        case 3:
+            cargo = 'Atendente';
+            break;
+        case 4:
+            cargo = 'Estoquista';
+            break;
+        case 5:
+            cargo = 'Balconista';
+            break;
+        case 6:
+            cargo = 'Gerente';
+            break;
+        default:
+            cargo = 'Indefinido';
+            break;
     }
 
+    validarCargo(cargo)
+    validarCPF(cpf)
+    validarEmail(email)
+
+    let usuario = { 
+      nome: nomeDoUsuario, 
+      cpf: cpf, 
+      email: email, 
+      senha: senha, 
+      cargo: cargo 
+      }
+      usuarios.push(usuario)
     /* 
        Aqui vocês implementam o código referente a função 
     */
@@ -73,72 +107,124 @@ function logarUsuario() {
 }
 
 /* Produto / Usuário */
-
+//função para adicionar um novo filme ao estoque
 function adicionarProduto() {
-    let produto = prompt("Digite o nome do Filme que você vai adicionar ao estoque");
-    estoque.push(produto);  //o push vai servir para jogar na variavel estoque
+    //solicita ao usuario o nome do filme a ser adicionado
+    let nome = prompt("Digite o nome do Filme que você vai adicionar ao estoque");
+    //solicita ao usuario a quantidade de filmes a serem adicionados
+    let quantidade = parseInt(prompt("Digite a quantidade de filmes que serão adicionados ao estoque"));
+    //solicita ao usuario o periodo de aluguel do filme no estoque
+    let validade = prompt("Digite o periodo de aluguel do filme no estoque");
+
+    //um novo objeto para representar o filme
+    let novoProduto = {
+        nome: nome, //nome do filme
+        quantidade: quantidade, //quantidade de filmes
+        validade: validade //periodo de aluguel
+    };
+
+    //adiciona o novo filme ao estoque
+    estoque.push(novoProduto);
 }
-       //Aqui vocês implementam o código referente a função 
-    
 
-
+//função para consultar o tempo de aluguel de um filme especifico
 function validadeIndividual() {
-    let nome = prompt("Digite o nome do Filme para consultar sua validade:");
-    let produto =  estoque.find(item => item.nome === nome)
-
-    
-    
-       //Aqui vocês implementam o código referente a função 
-    
+    //solicita ao usuario o nome do filme para consultar seu tempo de aluguel
+    let nome = prompt("Digite o nome do Filme para consultar seu tempo de aluguel:");
+    //procura o filme no estoque pelo nome fornecido
+    let produto = estoque.find(item => item.nome === nome);
+    //se o filme for encontrado, exibe seu periodo de aluguel SE NÃO informa que não possui o mesmo no estoque
+    if (produto) {
+        console.log(`A validade do Filme "${produto.nome} alugado é ${produto.validade}`);
+    } else {
+        console.log("Filme não encontrado no estoque")
+    }
 }
 
+//função para imprimir um relatorio de validades de todos os filmes no estoque
 function imprimirRelatorioValidades() {
-    
-       //Aqui vocês implementam o código referente a função 
-    
+    console.log("Relatório de Validades:");
+    //itera(repete) todos os produtos no estoque e mostra o nome e a validade de cada um
+    estoque.forEach(produto => {
+        console.log(`Nome do Filme: ${produto.nome}, Validade: ${produto.validade}`)
+    });
 }
 
+//função para remover um filme do estoque
 function removerProduto() {
+    //solicita ao usuário o nome do filme que deseja remover
     let nome = prompt("Digite o nome do Filme que deseja remover:");
-        let index = estoque.indexOf(nome) 
-        if (index !== -1) {
-            estoque.splice(index, 1);
-            console.log("Filme Removido com sucesso")
-        } else {
-            console.log("Sinto muito o Filme não foi encontrado no estoque")
-        }
-     }   
-       //Aqui vocês implementam o código referente a função 
+    //encontra o indice do filme no estoque
+    let index = estoque.findIndex(produto => produto.nome === nome)
+    //Se o filme for encontrado vai de arrasta SE NÃO avisa que não tem o mesmo no estoque
+    if (index !== -1) {
+        estoque.splice(index, 1);
+        console.log("Filme removido");
+    } else {
+        console.log("Infelizmente não temos o seu Filme no estoque")
+    }
+}
 
-
+//função para atualizar a quantidade de um filme no estoque
 function atualizarQuantidade() {
-    let nome = prompt("Digite o nome do produto para atualizar sua quantidade:");
-    let quantidade = parseInt(prompt("Digite a nova quantidade do produto:"));
+    //pede ao usuário o nome do filme para atualizar sua quantidade
+    let nome = prompt("Digite o nome do filme para atualizar sua quantidade:");
+    //agora a nova quantidade do mesmo filme
+    let quantidade = parseInt(prompt("Digite a nova quantidade do filme:"));
 
-    
-       //Aqui vocês implementam o código referente a função 
-    
+    //encontra o produto no estoque pelo nome 
+    let produto = estoque.find(item => item.nome === nome);
+    //se o produto for encontrado atualiza sua quantidade SE NÃO retorna que o mesmo não foi encontrado
+    if (produto) {
+        produto.quantidade = quantidade;
+        //esse comando foi pq tava saindo com um tal de quot no console
+        let nomesemquot = produto.nome.replace(/\\\"/g, '');
+        console.log(`Quantidade do Filme "${nomesemquot}" atualizada para ${quantidade}`)
+    } else {
+        console.log("Seu Filme não foi encontrado no estoque")
+    }
 }
 
 function cadastrarFornecedor() {
-    let nomeDaEmpresa;
-    let cnpj;
-    let email;
-    let telefone;
+    let nomeDaEmpresa = prompt('Nome: ')
+    let cnpj = parseInt(prompt('CNPJ: '))
+    let email = prompt('Email: ')
+    let telefone = parseInt(prompt('Telefone: '))
     let produtos = [];
-    
+    let fornecedor = { nomeDaEmpresa, cnpj, email, telefone, produtos };
+    fornecedores.push(fornecedor);
        //Aqui vocês implementam o código referente a função 
     
-}
+
 
 function listarFornecedores() {
-    
+    console.log(`Lista de Fornecedores:`)
+    for (let i = 0; i < 3; i++)
+    console.log(`Nome: ${nomeDaEmpresa[i]}, ${cnpj[i]}, ${email[i]}, ${telefone[i]}`)   
+
+/*
+function email(y){ //Dizer se o email é um email válido ou não
+    if (y.includes('@') == false){ //Caso não contenha "@", é um email inválido
+        listarFornecedores() //Repete toda a operação caso o email seja inválido
+    }
+    if (y.includes('.') == false){  //Caso não contenha ".", é um email inválido
+        listarFornecedores() //Repete toda a operação caso o email seja inválido
+    }
+*/    
+
+
        //Aqui vocês implementam o código referente a função
        //Usar IFs para verificar se o e-mail e senha estão corretos.
     
 }
 
-function removerFornecedor() {
+function removerFornecedor(nomeDaEmpresa) {
+    if (empresas.hasOwnProperty(nomeDaEmpresa)) {
+        delete empresas[nomeDaEmpresa];
+    console.log(`Fornecedor ${nomeDaEmpresa} removido com sucesso.`);
+    } else {
+        console.log(`Fornecedor ${nomeDaEmpresa} não encontrado.`);
+    }
     
        //Aqui vocês implementam o código referente a função
        //Usar IFs para verificar se o e-mail e senha estão corretos.
@@ -188,12 +274,15 @@ console.log('******+++*******');
 // atualizarQuantidade();
 
 // /* 11 - Cadastrar fornecedor, no minimo 3 */
-// cadastrarFornecedor();
+ cadastrarFornecedor();
+ console.log(cadastrarFornecedor);
 
 // /* 12 - Listar fornecedores */
-// listarFornecedores();
-
+ listarFornecedores();
+ console.log(listarFornecedores);
 // /* 13 - Remover 1 fornecedor e depois imprimir a lista completa */
-// removerFornecedor();
-// listarFornecedores();
-
+ removerFornecedor();
+ listarFornecedores();
+ console.log(removerFornecedor);
+ console.log(listarFornecedores);
+}
