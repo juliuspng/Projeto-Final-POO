@@ -107,6 +107,12 @@ function logarUsuario() {
 }
 
 /* Produto / Usuário */
+
+//função para corrigir o quot
+function nomesemquot(nome) {
+    return nome.replace(/\\?\"/g, '');
+}
+
 //função para adicionar um novo filme ao estoque
 function adicionarProduto() {
     //solicita ao usuario o nome do filme a ser adicionado
@@ -135,7 +141,7 @@ function validadeIndividual() {
     let produto = estoque.find(item => item.nome === nome);
     //se o filme for encontrado, exibe seu periodo de aluguel SE NÃO informa que não possui o mesmo no estoque
     if (produto) {
-        console.log(`A validade do Filme "${produto.nome} alugado é ${produto.validade}`);
+        console.log(`A validade do Filme "${nomesemquot(produto.nome)} alugado é ${produto.validade}`);
     } else {
         console.log("Filme não encontrado no estoque")
     }
@@ -144,9 +150,10 @@ function validadeIndividual() {
 //função para imprimir um relatorio de validades de todos os filmes no estoque
 function imprimirRelatorioValidades() {
     console.log("Relatório de Validades:");
+    console.log("Quantidade de produtos no estoque:", estoque.length);
     //itera(repete) todos os produtos no estoque e mostra o nome e a validade de cada um
     estoque.forEach(produto => {
-        console.log(`Nome do Filme: ${produto.nome}, Validade: ${produto.validade}`)
+        console.log(`Nome do Filme: ${nomesemquot(produto.nome)}, Validade: ${produto.validade}`)
     });
 }
 
@@ -178,8 +185,8 @@ function atualizarQuantidade() {
     if (produto) {
         produto.quantidade = quantidade;
         //esse comando foi pq tava saindo com um tal de quot no console
-        let nomesemquot = produto.nome.replace(/\\\"/g, '');
-        console.log(`Quantidade do Filme "${nomesemquot}" atualizada para ${quantidade}`)
+       
+        console.log(`Quantidade do produto "${nomesemquot(nome)}" atualizada para ${quantidade}`)
     } else {
         console.log("Seu Filme não foi encontrado no estoque")
     }
